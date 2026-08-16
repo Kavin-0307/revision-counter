@@ -49,6 +49,18 @@
   .empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 13px; }
   .setup-banner { background: #3d2c00; border: 1px solid #7a5c00; color: #f0d264; padding: 12px 16px; margin: 14px 18px; border-radius: 6px; font-size: 12.5px; line-height: 1.6; }
   .setup-banner code { background: #00000040; padding: 1px 5px; border-radius: 4px; }
+  .custom-tag { color: var(--accent); border-color: var(--accent); }
+  .delete-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 5px 9px; border-radius: 6px; font-family: var(--mono); font-size: 13px; cursor: pointer; line-height: 1; }
+  .delete-btn:hover { border-color: #f85149; color: #f85149; }
+  details.add-panel { max-width: 900px; margin: 14px auto 0; padding: 0 18px; }
+  details.add-panel summary { cursor: pointer; font-size: 12px; color: var(--muted); padding: 4px 0; user-select: none; }
+  details.add-panel summary:hover { color: var(--text); }
+  #addProblemForm { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; padding: 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+  #addProblemForm input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 7px 10px; border-radius: 6px; font-family: var(--mono); font-size: 13px; }
+  #addProblemForm input#newTopic { flex: 1 1 160px; }
+  #addProblemForm input#newName { flex: 2 1 220px; }
+  #addProblemForm input#newPattern { flex: 1 1 120px; }
+  #addProblemForm button { background: var(--accent); color: #06210f; border: none; padding: 7px 14px; border-radius: 6px; font-family: var(--mono); font-size: 12.5px; font-weight: bold; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -81,6 +93,16 @@
   then reload. Until then this page just shows the problem list with no persistence.
 </div>
 
+<details class="add-panel">
+  <summary>+ add a problem manually</summary>
+  <form id="addProblemForm">
+    <input type="text" id="newTopic" placeholder="topic (e.g. Dynamic Programming)" list="topicSuggestions" required>
+    <input type="text" id="newName" placeholder="problem name (e.g. maximum-subarray)" required>
+    <input type="text" id="newPattern" placeholder="pattern tag (optional)">
+    <button type="submit">Add</button>
+  </form>
+</details>
+
 <main id="main">
   <div class="empty">loading...</div>
 </main>
@@ -107,11 +129,17 @@ const FIREBASE_CONFIG = {
 const PROBLEMS = [{"topic": "Dynamic Programming", "name": "arithmetic-slices", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "best-time-to-buy-and-sell-stock", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "best-time-to-buy-and-sell-stock-iii", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "best-time-to-buy-and-sell-stock-iv", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "best-time-to-buy-and-sell-stock-with-transaction-fee", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "burst-balloons", "pattern": "Interval"}, {"topic": "Dynamic Programming", "name": "cherry-pickup", "pattern": "Grid"}, {"topic": "Dynamic Programming", "name": "cherry-pickup-ii", "pattern": "Grid"}, {"topic": "Dynamic Programming", "name": "climbing-stairs", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "coin-change", "pattern": "Knapsack"}, {"topic": "Dynamic Programming", "name": "coin-change-ii", "pattern": "Knapsack"}, {"topic": "Dynamic Programming", "name": "decode-ways", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "delete-operation-for-two-strings", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "distinct-subsequences", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "edit-distance", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "fibonacci-number", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "house-robber", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "house-robber-ii", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "interleaving-string", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "longest-fibonacci-subarray", "pattern": "LIS"}, {"topic": "Dynamic Programming", "name": "longest-increasing-subsequence", "pattern": "LIS"}, {"topic": "Dynamic Programming", "name": "longest-palindromic-subsequence", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "longest-palindromic-substring", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "maximum-product-subarray", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "maximum-subarray", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "minimum-cost-to-cut-a-stick", "pattern": "Interval"}, {"topic": "Dynamic Programming", "name": "minimum-insertion-steps-to-make-a-string-palindrome", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "minimum-path-sum", "pattern": "Grid"}, {"topic": "Dynamic Programming", "name": "paint-house", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "palindrome-partitioning-ii", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "partition-array-into-two-arrays-to-minimize-sum-difference", "pattern": "Knapsack"}, {"topic": "Dynamic Programming", "name": "partition-equal-subset-sum", "pattern": "Knapsack"}, {"topic": "Dynamic Programming", "name": "perfect-squares", "pattern": "Knapsack"}, {"topic": "Dynamic Programming", "name": "shortest-common-supersequence", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "stone-game", "pattern": "Interval"}, {"topic": "Dynamic Programming", "name": "target-sum", "pattern": "Knapsack"}, {"topic": "Dynamic Programming", "name": "triangle", "pattern": "Grid"}, {"topic": "Dynamic Programming", "name": "unique-binary-search-trees", "pattern": "1D"}, {"topic": "Dynamic Programming", "name": "unique-paths", "pattern": "Grid"}, {"topic": "Dynamic Programming", "name": "unique-paths-ii", "pattern": "Grid"}, {"topic": "Dynamic Programming", "name": "wildcard-matching", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "word-break", "pattern": "String DP"}, {"topic": "Dynamic Programming", "name": "word-break-ii", "pattern": "String DP"}, {"topic": "Greedy", "name": "assign-cookies", "pattern": "Greedy"}, {"topic": "Greedy", "name": "best-time-to-buy-and-sell-stock-ii", "pattern": "Greedy"}, {"topic": "Greedy", "name": "gas-station", "pattern": "Greedy"}, {"topic": "Greedy", "name": "hand-of-straights", "pattern": "Greedy"}, {"topic": "Greedy", "name": "jump-game", "pattern": "Greedy"}, {"topic": "Greedy", "name": "jump-game-ii", "pattern": "Greedy"}, {"topic": "Greedy", "name": "task-scheduler", "pattern": "Greedy"}, {"topic": "Greedy", "name": "wiggle-subsequence", "pattern": "Greedy"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "01-matrix", "pattern": "BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "cheapest-flights-within-k-stops", "pattern": "Shortest Path"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "clone-graph", "pattern": "DFS/BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "course-schedule", "pattern": "Topo"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "course-schedule-ii", "pattern": "Topo"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "find-center-of-star-graph", "pattern": "BFS/DFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "find-eventual-safe-states", "pattern": "Cycle/Topo"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "find-if-path-exists-in-graph", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance", "pattern": "Shortest Path"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "flood-fill", "pattern": "BFS/DFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "graph-valid-tree", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "is-graph-bipartite", "pattern": "Bipartite"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "minimum-cost-to-reach-destination-in-time", "pattern": "Shortest Path"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "network-delay-time", "pattern": "Shortest Path"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "number-of-connected-components-in-an-undirected-graph", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "number-of-enclaves", "pattern": "BFS/DFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "number-of-islands", "pattern": "BFS/DFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "number-of-operations-to-make-network-connected", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "number-of-provinces", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "number-of-ways-to-arrive-at-destination", "pattern": "Shortest Path"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "path-with-minimum-effort", "pattern": "Shortest Path"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "redundant-connection", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "remove-methods-from-project", "pattern": "DFS/BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "rotting-oranges", "pattern": "BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "satisfiability-of-equality-equations", "pattern": "Union-Find"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "shortest-path-in-binary-matrix", "pattern": "BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "surrounded-regions", "pattern": "DFS/BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "word-ladder", "pattern": "BFS"}, {"topic": "Graphs (BFS/DFS/Union-Find)", "name": "word-ladder-ii", "pattern": "BFS"}, {"topic": "Binary Trees", "name": "add-one-row-to-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "all-nodes-distance-k-in-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "all-possible-full-binary-trees", "pattern": ""}, {"topic": "Binary Trees", "name": "amount-of-time-for-binary-tree-to-be-infected", "pattern": ""}, {"topic": "Binary Trees", "name": "balanced-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-inorder-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-level-order-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-level-order-traversal-ii", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-maximum-path-sum", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-postorder-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-preorder-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-right-side-view", "pattern": ""}, {"topic": "Binary Trees", "name": "binary-tree-zigzag-level-order-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "check-completeness-of-a-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "construct-binary-tree-from-inorder-and-postorder-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "construct-binary-tree-from-preorder-and-inorder-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "construct-binary-tree-from-preorder-and-postorder-traversal", "pattern": ""}, {"topic": "Binary Trees", "name": "construct-string-from-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "count-complete-tree-nodes", "pattern": ""}, {"topic": "Binary Trees", "name": "count-good-nodes-in-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "diameter-of-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "find-duplicate-subtrees", "pattern": ""}, {"topic": "Binary Trees", "name": "find-nearest-right-node-in-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "flatten-binary-tree-to-linked-list", "pattern": ""}, {"topic": "Binary Trees", "name": "leaf-similar-trees", "pattern": ""}, {"topic": "Binary Trees", "name": "lowest-common-ancestor-of-a-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "lowest-common-ancestor-of-deepest-leaves", "pattern": ""}, {"topic": "Binary Trees", "name": "maximum-depth-of-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "maximum-width-of-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "merge-two-binary-trees", "pattern": ""}, {"topic": "Binary Trees", "name": "minimum-depth-of-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "path-sum", "pattern": ""}, {"topic": "Binary Trees", "name": "path-sum-ii", "pattern": ""}, {"topic": "Binary Trees", "name": "populating-next-right-pointers-in-each-node", "pattern": ""}, {"topic": "Binary Trees", "name": "populating-next-right-pointers-in-each-node-ii", "pattern": ""}, {"topic": "Binary Trees", "name": "print-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "same-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "serialize-and-deserialize-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "sum-root-to-leaf-numbers", "pattern": ""}, {"topic": "Binary Trees", "name": "symmetric-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "univalued-binary-tree", "pattern": ""}, {"topic": "Binary Trees", "name": "vertical-order-traversal-of-a-binary-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "balance-a-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "binary-search-tree-iterator", "pattern": ""}, {"topic": "Binary Search Trees", "name": "binary-search-tree-to-greater-sum-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "construct-binary-search-tree-from-preorder-traversal", "pattern": ""}, {"topic": "Binary Search Trees", "name": "convert-binary-search-tree-to-sorted-doubly-linked-list", "pattern": ""}, {"topic": "Binary Search Trees", "name": "convert-bst-to-greater-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "convert-sorted-array-to-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "convert-sorted-list-to-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "delete-node-in-a-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "inorder-successor-in-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "inorder-successor-in-bst-ii", "pattern": ""}, {"topic": "Binary Search Trees", "name": "insert-into-a-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "kth-smallest-element-in-a-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "lowest-common-ancestor-of-a-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "maximum-sum-bst-in-binary-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "minimum-absolute-difference-in-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "range-sum-of-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "recover-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "search-in-a-binary-search-tree", "pattern": ""}, {"topic": "Binary Search Trees", "name": "serialize-and-deserialize-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "split-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "two-sum-bsts", "pattern": ""}, {"topic": "Binary Search Trees", "name": "two-sum-iv-input-is-a-bst", "pattern": ""}, {"topic": "Binary Search Trees", "name": "validate-binary-search-tree", "pattern": ""}, {"topic": "Heaps", "name": "find-median-from-data-stream", "pattern": ""}, {"topic": "Heaps", "name": "ipo", "pattern": ""}, {"topic": "Heaps", "name": "k-closest-points-to-origin", "pattern": ""}, {"topic": "Heaps", "name": "kth-largest-element-in-a-stream", "pattern": ""}, {"topic": "Heaps", "name": "kth-largest-element-in-an-array", "pattern": ""}, {"topic": "Heaps", "name": "kth-smallest-element-in-a-sorted-matrix", "pattern": ""}, {"topic": "Heaps", "name": "merge-k-sorted-lists", "pattern": ""}, {"topic": "Heaps", "name": "top-k-frequent-elements", "pattern": ""}, {"topic": "Trie", "name": "design-add-and-search-words-data-structure", "pattern": ""}, {"topic": "Trie", "name": "implement-trie-prefix-tree", "pattern": ""}, {"topic": "Trie", "name": "maximum-xor-of-two-numbers-in-an-array", "pattern": ""}, {"topic": "Trie", "name": "maximum-xor-with-an-element-from-array", "pattern": ""}, {"topic": "Trie", "name": "word-search-ii", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "3sum", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "4sum", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "binary-subarrays-with-sum", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "check-if-array-is-sorted-and-rotated", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "container-with-most-water", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "find-missing-elements", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "find-the-duplicate-number", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "fruit-into-baskets", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "grumpy-bookstore-owner", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "increasing-triplet-subsequence", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "length-of-longest-subarray-with-at-most-k-frequency", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "longest-repeating-character-replacement", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "longest-subarray-of-1s-after-deleting-one-element", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "longest-substring-with-at-most-k-distinct-characters", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "longest-substring-with-at-most-two-distinct-characters", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "longest-substring-without-repeating-characters", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "majority-element", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "majority-element-ii", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "max-consecutive-ones", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "max-consecutive-ones-ii", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "max-consecutive-ones-iii", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "maximum-average-subarray-i", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "maximum-length-substring-with-two-occurrences", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "maximum-number-of-vowels-in-a-substring-of-given-length", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "maximum-points-you-can-obtain-from-cards", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "minimum-size-subarray-sum", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "move-zeroes", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "next-permutation", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "number-of-substrings-containing-all-three-characters", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "product-of-array-except-self", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "range-sum-query-2d-immutable", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "range-sum-query-immutable", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "rearrange-array-elements-by-sign", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "remove-duplicates-from-sorted-array", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "remove-duplicates-from-sorted-array-ii", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "remove-element", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "reverse-string", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "rotate-array", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "rotate-image", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "running-sum-of-1d-array", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "set-matrix-zeroes", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "smallest-missing-integer-greater-than-sequential-prefix-sum", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "spiral-matrix", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "spiral-matrix-ii", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "squares-of-a-sorted-array", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "subarrays-with-k-different-integers", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "trapping-rain-water", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "two-sum-ii-input-array-is-sorted", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "valid-mountain-array", "pattern": ""}, {"topic": "Arrays & Two Pointer / Sliding Window", "name": "valid-triangle-number", "pattern": ""}, {"topic": "Strings", "name": "find-the-index-of-the-first-occurrence-in-a-string", "pattern": ""}, {"topic": "Strings", "name": "is-subsequence", "pattern": ""}, {"topic": "Strings", "name": "length-of-last-word", "pattern": ""}, {"topic": "Strings", "name": "longest-palindrome", "pattern": ""}, {"topic": "Strings", "name": "reverse-string-ii", "pattern": ""}, {"topic": "Strings", "name": "reverse-words-in-a-string", "pattern": ""}, {"topic": "Strings", "name": "string-to-integer-atoi", "pattern": ""}, {"topic": "Strings", "name": "valid-palindrome", "pattern": ""}, {"topic": "Hashing", "name": "contains-duplicate", "pattern": ""}, {"topic": "Hashing", "name": "contains-duplicate-ii", "pattern": ""}, {"topic": "Hashing", "name": "contiguous-array", "pattern": ""}, {"topic": "Hashing", "name": "count-elements-with-maximum-frequency", "pattern": ""}, {"topic": "Hashing", "name": "find-missing-and-repeated-values", "pattern": ""}, {"topic": "Hashing", "name": "find-the-least-frequent-digit", "pattern": ""}, {"topic": "Hashing", "name": "first-element-with-unique-frequency", "pattern": ""}, {"topic": "Hashing", "name": "first-letter-to-appear-twice", "pattern": ""}, {"topic": "Hashing", "name": "group-anagrams", "pattern": ""}, {"topic": "Hashing", "name": "intersection-of-two-arrays", "pattern": ""}, {"topic": "Hashing", "name": "intersection-of-two-arrays-ii", "pattern": ""}, {"topic": "Hashing", "name": "longest-consecutive-sequence", "pattern": ""}, {"topic": "Hashing", "name": "repeated-dna-sequences", "pattern": ""}, {"topic": "Hashing", "name": "subarray-sum-equals-k", "pattern": ""}, {"topic": "Hashing", "name": "sum-of-unique-elements", "pattern": ""}, {"topic": "Hashing", "name": "two-sum", "pattern": ""}, {"topic": "Hashing", "name": "valid-anagram", "pattern": ""}, {"topic": "Stack & Queue", "name": "132-pattern", "pattern": ""}, {"topic": "Stack & Queue", "name": "basic-calculator-ii", "pattern": ""}, {"topic": "Stack & Queue", "name": "daily-temperatures", "pattern": ""}, {"topic": "Stack & Queue", "name": "implement-queue-using-stacks", "pattern": ""}, {"topic": "Stack & Queue", "name": "implement-stack-using-queues", "pattern": ""}, {"topic": "Stack & Queue", "name": "largest-rectangle-in-histogram", "pattern": ""}, {"topic": "Stack & Queue", "name": "maximal-rectangle", "pattern": ""}, {"topic": "Stack & Queue", "name": "min-stack", "pattern": ""}, {"topic": "Stack & Queue", "name": "minimum-add-to-make-parentheses-valid", "pattern": ""}, {"topic": "Stack & Queue", "name": "minimum-remove-to-make-valid-parentheses", "pattern": ""}, {"topic": "Stack & Queue", "name": "next-greater-element-i", "pattern": ""}, {"topic": "Stack & Queue", "name": "next-greater-element-ii", "pattern": ""}, {"topic": "Stack & Queue", "name": "online-stock-span", "pattern": ""}, {"topic": "Stack & Queue", "name": "remove-duplicate-letters", "pattern": ""}, {"topic": "Stack & Queue", "name": "remove-k-digits", "pattern": ""}, {"topic": "Stack & Queue", "name": "remove-outermost-parentheses", "pattern": ""}, {"topic": "Stack & Queue", "name": "sliding-window-maximum", "pattern": ""}, {"topic": "Stack & Queue", "name": "sum-of-subarray-minimums", "pattern": ""}, {"topic": "Stack & Queue", "name": "sum-of-subarray-ranges", "pattern": ""}, {"topic": "Stack & Queue", "name": "valid-parentheses", "pattern": ""}, {"topic": "Stack & Queue", "name": "verify-preorder-serialization-of-a-binary-tree", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "beautiful-arrangement", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "combination-sum", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "combination-sum-ii", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "combination-sum-iii", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "combinations", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "factor-combinations", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "generate-parentheses", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "letter-combinations-of-a-phone-number", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "n-queens", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "non-decreasing-subsequences", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "palindrome-partitioning", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "permutations", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "permutations-ii", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "restore-ip-addresses", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "subsets", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "subsets-ii", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "sudoku-solver", "pattern": ""}, {"topic": "Recursion & Backtracking", "name": "word-search", "pattern": ""}, {"topic": "Linked Lists", "name": "add-two-numbers", "pattern": ""}, {"topic": "Linked Lists", "name": "add-two-numbers-ii", "pattern": ""}, {"topic": "Linked Lists", "name": "convert-binary-number-in-a-linked-list-to-integer", "pattern": ""}, {"topic": "Linked Lists", "name": "convert-doubly-linked-list-to-array-i", "pattern": ""}, {"topic": "Linked Lists", "name": "convert-doubly-linked-list-to-array-ii", "pattern": ""}, {"topic": "Linked Lists", "name": "copy-list-with-random-pointer", "pattern": ""}, {"topic": "Linked Lists", "name": "delete-node-in-a-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "delete-the-middle-node-of-a-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "insertion-sort-list", "pattern": ""}, {"topic": "Linked Lists", "name": "intersection-of-two-linked-lists", "pattern": ""}, {"topic": "Linked Lists", "name": "linked-list-cycle", "pattern": ""}, {"topic": "Linked Lists", "name": "linked-list-cycle-ii", "pattern": ""}, {"topic": "Linked Lists", "name": "maximum-twin-sum-of-a-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "merge-two-sorted-lists", "pattern": ""}, {"topic": "Linked Lists", "name": "middle-of-the-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "odd-even-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "palindrome-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "plus-one-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "remove-duplicates-from-an-unsorted-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "remove-duplicates-from-sorted-list", "pattern": ""}, {"topic": "Linked Lists", "name": "remove-duplicates-from-sorted-list-ii", "pattern": ""}, {"topic": "Linked Lists", "name": "remove-linked-list-elements", "pattern": ""}, {"topic": "Linked Lists", "name": "remove-nth-node-from-end-of-list", "pattern": ""}, {"topic": "Linked Lists", "name": "reorder-list", "pattern": ""}, {"topic": "Linked Lists", "name": "reverse-linked-list", "pattern": ""}, {"topic": "Linked Lists", "name": "reverse-linked-list-ii", "pattern": ""}, {"topic": "Linked Lists", "name": "reverse-nodes-in-even-length-groups", "pattern": ""}, {"topic": "Linked Lists", "name": "reverse-nodes-in-k-group", "pattern": ""}, {"topic": "Linked Lists", "name": "rotate-list", "pattern": ""}, {"topic": "Linked Lists", "name": "sort-list", "pattern": ""}, {"topic": "Linked Lists", "name": "swap-nodes-in-pairs", "pattern": ""}, {"topic": "Linked Lists", "name": "swapping-nodes-in-a-linked-list", "pattern": ""}, {"topic": "Searching", "name": "binary-search", "pattern": ""}, {"topic": "Searching", "name": "capacity-to-ship-packages-within-d-days", "pattern": ""}, {"topic": "Searching", "name": "find-first-and-last-position-of-element-in-sorted-array", "pattern": ""}, {"topic": "Searching", "name": "find-minimum-in-rotated-sorted-array", "pattern": ""}, {"topic": "Searching", "name": "find-minimum-in-rotated-sorted-array-ii", "pattern": ""}, {"topic": "Searching", "name": "find-peak-element", "pattern": ""}, {"topic": "Searching", "name": "koko-eating-bananas", "pattern": ""}, {"topic": "Searching", "name": "kth-missing-positive-number", "pattern": ""}, {"topic": "Searching", "name": "median-of-two-sorted-arrays", "pattern": ""}, {"topic": "Searching", "name": "minimum-number-of-days-to-make-m-bouquets", "pattern": ""}, {"topic": "Searching", "name": "search-a-2d-matrix", "pattern": ""}, {"topic": "Searching", "name": "search-a-2d-matrix-ii", "pattern": ""}, {"topic": "Searching", "name": "search-in-rotated-sorted-array", "pattern": ""}, {"topic": "Searching", "name": "search-in-rotated-sorted-array-ii", "pattern": ""}, {"topic": "Searching", "name": "search-insert-position", "pattern": ""}, {"topic": "Searching", "name": "single-element-in-a-sorted-array", "pattern": ""}, {"topic": "Searching", "name": "sqrtx", "pattern": ""}, {"topic": "Searching", "name": "valid-perfect-square", "pattern": ""}, {"topic": "Sorting", "name": "merge-intervals", "pattern": ""}, {"topic": "Sorting", "name": "merge-sorted-array", "pattern": ""}, {"topic": "Sorting", "name": "minimum-absolute-difference", "pattern": ""}, {"topic": "Sorting", "name": "reverse-pairs", "pattern": ""}, {"topic": "Sorting", "name": "sort-colors", "pattern": ""}, {"topic": "Sorting", "name": "sort-integers-by-the-number-of-1-bits", "pattern": ""}, {"topic": "Bit Manipulation", "name": "binary-watch", "pattern": ""}, {"topic": "Bit Manipulation", "name": "counting-bits", "pattern": ""}, {"topic": "Bit Manipulation", "name": "longest-subsequence-with-non-zero-bitwise-xor", "pattern": ""}, {"topic": "Bit Manipulation", "name": "minimum-bit-flips-to-convert-number", "pattern": ""}, {"topic": "Bit Manipulation", "name": "number-of-1-bits", "pattern": ""}, {"topic": "Bit Manipulation", "name": "power-of-two", "pattern": ""}, {"topic": "Bit Manipulation", "name": "single-number", "pattern": ""}, {"topic": "Bit Manipulation", "name": "single-number-ii", "pattern": ""}, {"topic": "Bit Manipulation", "name": "single-number-iii", "pattern": ""}, {"topic": "Segment Tree / Fenwick", "name": "longest-substring-of-one-repeating-character", "pattern": ""}, {"topic": "Math", "name": "add-digits", "pattern": ""}, {"topic": "Math", "name": "arranging-coins", "pattern": ""}, {"topic": "Math", "name": "count-primes", "pattern": ""}, {"topic": "Math", "name": "factorial-trailing-zeroes", "pattern": ""}, {"topic": "Math", "name": "happy-number", "pattern": ""}, {"topic": "Math", "name": "integer-to-roman", "pattern": ""}, {"topic": "Math", "name": "missing-number", "pattern": ""}, {"topic": "Math", "name": "palindrome-number", "pattern": ""}, {"topic": "Math", "name": "partitioning-into-minimum-number-of-deci-binary-numbers", "pattern": ""}, {"topic": "Math", "name": "pascals-triangle", "pattern": ""}, {"topic": "Math", "name": "pascals-triangle-ii", "pattern": ""}, {"topic": "Math", "name": "plus-one", "pattern": ""}, {"topic": "Math", "name": "powx-n", "pattern": ""}, {"topic": "Math", "name": "reverse-integer", "pattern": ""}, {"topic": "Math", "name": "roman-to-integer", "pattern": ""}, {"topic": "Math", "name": "smallest-divisible-digit-product-i", "pattern": ""}, {"topic": "Math", "name": "smallest-divisible-digit-product-ii", "pattern": ""}, {"topic": "Math", "name": "strictly-palindromic-number", "pattern": ""}, {"topic": "Design", "name": "design-hashset", "pattern": ""}, {"topic": "Design", "name": "design-linked-list", "pattern": ""}, {"topic": "Design", "name": "design-twitter", "pattern": ""}, {"topic": "Design", "name": "lru-cache", "pattern": ""}, {"topic": "SQL", "name": "article-views-i", "pattern": ""}, {"topic": "SQL", "name": "average-selling-price", "pattern": ""}, {"topic": "SQL", "name": "average-time-of-process-per-machine", "pattern": ""}, {"topic": "SQL", "name": "big-countries", "pattern": ""}, {"topic": "SQL", "name": "confirmation-rate", "pattern": ""}, {"topic": "SQL", "name": "consecutive-numbers", "pattern": ""}, {"topic": "SQL", "name": "count-salary-categories", "pattern": ""}, {"topic": "SQL", "name": "customer-who-visited-but-did-not-make-any-transactions", "pattern": ""}, {"topic": "SQL", "name": "employees-whose-manager-left-the-company", "pattern": ""}, {"topic": "SQL", "name": "find-customer-referee", "pattern": ""}, {"topic": "SQL", "name": "find-followers-count", "pattern": ""}, {"topic": "SQL", "name": "first-and-last-call-on-the-same-day", "pattern": ""}, {"topic": "SQL", "name": "invalid-tweets", "pattern": ""}, {"topic": "SQL", "name": "managers-with-at-least-5-direct-reports", "pattern": ""}, {"topic": "SQL", "name": "not-boring-movies", "pattern": ""}, {"topic": "SQL", "name": "rearrange-products-table", "pattern": ""}, {"topic": "SQL", "name": "recyclable-and-low-fat-products", "pattern": ""}, {"topic": "SQL", "name": "rising-temperature", "pattern": ""}];
 
 let counts = {};
+let customProblems = [];
 let db = null;
 let userId = null;
 let configured = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
 
-const DOC_PATH = () => doc(db, "revisionCounters", userId);
+function allProblems() {
+  return [...PROBLEMS, ...customProblems];
+}
+
+const SHARED_DOC_ID = "main"; // change this if you ever want a second independent board
+const DOC_PATH = () => doc(db, "revisionCounters", SHARED_DOC_ID);
 
 function keyFor(p) { return p.topic + '::' + p.name; }
 
@@ -125,7 +153,9 @@ async function loadCounts() {
   if (!configured) return;
   try {
     const snap = await getDoc(DOC_PATH());
-    counts = snap.exists() ? (snap.data().counts || {}) : {};
+    const data = snap.exists() ? snap.data() : {};
+    counts = data.counts || {};
+    customProblems = data.customProblems || [];
     setSyncStatus('synced', 'ok');
   } catch (e) {
     console.error(e);
@@ -138,7 +168,7 @@ async function persistCounts() {
   if (!configured) return;
   setSyncStatus('saving...', '');
   try {
-    await setDoc(DOC_PATH(), { counts, updatedAt: Date.now() });
+    await setDoc(DOC_PATH(), { counts, customProblems, updatedAt: Date.now() });
     setSyncStatus('synced', 'ok');
   } catch (e) {
     console.error(e);
@@ -153,7 +183,7 @@ async function setCount(p, val) {
 
 function uniqueTopics() {
   const seen = [];
-  for (const p of PROBLEMS) if (!seen.includes(p.topic)) seen.push(p.topic);
+  for (const p of allProblems()) if (!seen.includes(p.topic)) seen.push(p.topic);
   return seen;
 }
 
@@ -161,6 +191,14 @@ function populateTopicFilter() {
   const sel = document.getElementById('topicFilter');
   sel.innerHTML = '<option value="all">all topics</option>' +
     uniqueTopics().map(t => `<option value="${t}">${t}</option>`).join('');
+
+  let dl = document.getElementById('topicSuggestions');
+  if (!dl) {
+    dl = document.createElement('datalist');
+    dl.id = 'topicSuggestions';
+    document.body.appendChild(dl);
+  }
+  dl.innerHTML = uniqueTopics().map(t => `<option value="${t}">`).join('');
 }
 
 function currentFilters() {
@@ -175,16 +213,19 @@ function cssKey(p) { return keyFor(p).replace(/[^a-zA-Z0-9]/g, '_'); }
 
 function rowHtml(p) {
   const c = counts[keyFor(p)] || 0;
+  const isCustom = customProblems.some(cp => keyFor(cp) === keyFor(p));
   return `
     <div class="row" data-key="${keyFor(p)}">
       <div class="row-left">
         <span class="name">${p.name}</span>
         ${p.pattern ? `<span class="pattern">${p.pattern}</span>` : ''}
+        ${isCustom ? `<span class="pattern custom-tag">custom</span>` : ''}
       </div>
       <div class="row-right">
         <span class="count ${c > 0 ? 'nonzero' : ''}" id="count-${cssKey(p)}">${c}</span>
         <button class="undo-btn" data-key="${keyFor(p)}" ${c === 0 ? 'style="visibility:hidden"' : ''}>&minus;</button>
         <button class="revise-btn" data-key="${keyFor(p)}">Revise</button>
+        ${isCustom ? `<button class="delete-btn" data-key="${keyFor(p)}">&times;</button>` : ''}
       </div>
     </div>`;
 }
@@ -193,7 +234,7 @@ function render() {
   const { search, topic, sort } = currentFilters();
   const main = document.getElementById('main');
 
-  let filtered = PROBLEMS.filter(p => {
+  let filtered = allProblems().filter(p => {
     if (topic !== 'all' && p.topic !== topic) return false;
     if (search && !p.name.toLowerCase().includes(search)) return false;
     return true;
@@ -230,12 +271,13 @@ function render() {
   main.innerHTML = html;
   main.querySelectorAll('.revise-btn').forEach(btn => btn.addEventListener('click', onRevise));
   main.querySelectorAll('.undo-btn').forEach(btn => btn.addEventListener('click', onUndo));
+  main.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', onDeleteCustom));
   updateStats();
 }
 
 async function onRevise(e) {
   const key = e.target.getAttribute('data-key');
-  const p = PROBLEMS.find(pp => keyFor(pp) === key);
+  const p = allProblems().find(pp => keyFor(pp) === key);
   await setCount(p, (counts[key] || 0) + 1);
   e.target.classList.add('hit');
   setTimeout(() => e.target.classList.remove('hit'), 150);
@@ -244,26 +286,69 @@ async function onRevise(e) {
 
 async function onUndo(e) {
   const key = e.target.getAttribute('data-key');
-  const p = PROBLEMS.find(pp => keyFor(pp) === key);
+  const p = allProblems().find(pp => keyFor(pp) === key);
   await setCount(p, Math.max(0, (counts[key] || 0) - 1));
   render();
 }
 
+async function onDeleteCustom(e) {
+  const key = e.target.getAttribute('data-key');
+  if (!confirm('Remove this custom problem?')) return;
+  customProblems = customProblems.filter(cp => keyFor(cp) !== key);
+  delete counts[key];
+  await persistCounts();
+  render();
+}
+
+async function onAddProblem(e) {
+  e.preventDefault();
+  const topicInput = document.getElementById('newTopic');
+  const nameInput = document.getElementById('newName');
+  const patternInput = document.getElementById('newPattern');
+
+  const topic = topicInput.value.trim();
+  const name = nameInput.value.trim();
+  const pattern = patternInput.value.trim();
+
+  if (!topic || !name) {
+    alert('Topic and name are required.');
+    return;
+  }
+
+  const newProblem = { topic, name, pattern };
+  const key = keyFor(newProblem);
+
+  if (allProblems().some(p => keyFor(p) === key)) {
+    alert('A problem with that topic + name already exists.');
+    return;
+  }
+
+  customProblems.push(newProblem);
+  counts[key] = 0;
+  await persistCounts();
+
+  nameInput.value = '';
+  patternInput.value = '';
+  populateTopicFilter();
+  render();
+}
+
 function updateStats() {
+  const all = allProblems();
   let touched = 0, revisions = 0;
-  for (const p of PROBLEMS) {
+  for (const p of all) {
     const c = counts[keyFor(p)] || 0;
     if (c > 0) touched++;
     revisions += c;
   }
-  document.getElementById('stat-total').textContent = PROBLEMS.length;
+  document.getElementById('stat-total').textContent = all.length;
   document.getElementById('stat-touched').textContent = touched;
   document.getElementById('stat-revisions').textContent = revisions;
 }
 
 async function resetAll() {
   if (!confirm('Reset ALL revision counts to zero? This cannot be undone.')) return;
-  for (const p of PROBLEMS) counts[keyFor(p)] = 0;
+  for (const p of allProblems()) counts[keyFor(p)] = 0;
   await persistCounts();
   render();
 }
@@ -272,6 +357,7 @@ document.getElementById('search').addEventListener('input', render);
 document.getElementById('topicFilter').addEventListener('change', render);
 document.getElementById('sortBy').addEventListener('change', render);
 document.getElementById('resetAll').addEventListener('click', resetAll);
+document.getElementById('addProblemForm').addEventListener('submit', onAddProblem);
 
 (async function init() {
   populateTopicFilter();
